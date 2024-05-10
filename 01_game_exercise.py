@@ -3,7 +3,7 @@ import random
 import time
 
 # Initial parameters
-SCREEN_WIDTH, SCREEN_HEIGHT = 500, 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 600, 600
 pygame.font.init()
 font = pygame.font.Font(None, 50)
 
@@ -55,13 +55,13 @@ class player(pygame.sprite.Sprite):
 
 # Traffic class
 class traffic(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, color, width, height, vel, increment):
         # Define initial parameters
-        self.color = RED
-        self.width = 60
-        self.height = 100
-        self.vel = 20
-        self.vel_increment = 2
+        self.color = color
+        self.width = width
+        self.height = height
+        self.vel = vel
+        self.vel_increment = increment
 
         # Call the parent class (Sprite) constructor
         pygame.sprite.Sprite.__init__(self)
@@ -88,6 +88,30 @@ class traffic(pygame.sprite.Sprite):
             self.vel += self.vel_increment
 
 
+# Traffic subtype car
+class car(traffic):
+    def __init__(self):
+        # Define initial parameters
+        self.color = RED
+        self.width = 60
+        self.height = 100
+        self.vel = 20
+        self.vel_increment = 2
+        super(car, self).__init__(self.color, self.width, self.height, self.vel, self.vel_increment)
+
+
+# Traffic subtype truck
+class truck(traffic):
+    def __init__(self):
+        # Define initial parameters
+        self.color = ORANGE
+        self.width = 100
+        self.height = 150
+        self.vel = 10
+        self.vel_increment = 5
+        super(truck, self).__init__(self.color, self.width, self.height, self.vel, self.vel_increment)
+
+
 # Display 'game over' and quit the game
 def game_over(win):
     win.fill((255, 0, 0))
@@ -108,15 +132,18 @@ def run():
 
     # Initialize player and traffic
     player1 = player()
-    traffic1 = traffic()
+    traffic1 = car()
+    traffic2 = truck()
 
     # Create sprite groups
     all_traffic = pygame.sprite.Group()
     all_traffic.add(traffic1)
+    all_traffic.add(traffic2)
 
     all_sprites = pygame.sprite.Group()
     all_sprites.add(player1)
     all_sprites.add(traffic1)
+    all_sprites.add(traffic2)
 
     # Run the game
     running = True
